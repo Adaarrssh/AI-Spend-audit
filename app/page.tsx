@@ -70,7 +70,9 @@ export default function Home() {
         <div key={i} className="border p-4 mb-4 rounded">
           <select
             value={tool.name}
-            onChange={(e) => updateTool(i, "name", e.target.value)}
+            onChange={(e) =>
+              updateTool(i, "spend", Math.max(0, Number(e.target.value)))
+            }
             className="border p-2 w-full mb-2"
           >
             <option value="">Select Tool</option>
