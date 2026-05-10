@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import { runAudit } from "@/lib/audit";
 type Tool = {
   name: string;
   plan: string;
@@ -13,7 +13,7 @@ export default function Home() {
   const [tools, setTools] = useState<Tool[]>([]);
   const [teamSize, setTeamSize] = useState(1);
   const [useCase, setUseCase] = useState("coding");
-
+  const [results, setResults] = useState<any[]>([]);
   const toolOptions = [
     "ChatGPT",
     "Claude",
@@ -140,11 +140,33 @@ export default function Home() {
 
       <div className="mt-6">
         <button
+          onClick={() => {
+            const auditResults = runAudit(validTools, teamSize, useCase);
+
+            setResults(auditResults);
+          }}
           disabled={validTools.length === 0}
           className="bg-green-600 text-white px-4 py-2 disabled:opacity-50"
         >
           Run Audit
         </button>
+        <div className="mt-8">
+          {results.map((result, i) => (
+            <div key={i} className="border p-4 mb-3 rounded">
+              <h2 className="font-bold text-lg">{result.tool}</h2>
+
+              <p>Current Spend: ${result.currentSpend}</p>
+
+              <p>Recommended: {result.recommendedPlan}</p>
+
+              <p>New Cost: ${result.recommendedCost}</p>
+
+              <p>Savings: ${result.savings}</p>
+
+              <p className="mt-2 text-sm text-gray-600">{result.reason}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
